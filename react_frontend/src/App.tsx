@@ -1,6 +1,6 @@
 // Import React and necessary hooks
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 
 // Import context providers and hooks
 import { AuthProvider, useAuth } from './utils/Contexts/AuthContext';
@@ -16,7 +16,7 @@ import NotFound from './utils/Components/NotFound/NotFound';
 // Import route utilities
 import PrivateRoute from './utils/Routes/PrivateRoute';
 import PublicRoute from './utils/Routes/PublicRoute';
-import initializeAnalytics from './services/analytics';
+import { initializeAnalytics, sendDataForAnalytics } from './services/analytics';
 
 // Import response interceptors
 import { setupResponseInterceptorsRefreshToken } from './utils/ResponseInterceptors/setupResponseInterceptorsRefreshToken';
@@ -25,7 +25,7 @@ const App: React.FC = () => {
   useEffect(() => {
     // Initialize Google Analytics
     initializeAnalytics();
-  }, []);
+  }, []); // Dependency array ensures this effect runs only once
 
 
   return (
@@ -40,12 +40,18 @@ const App: React.FC = () => {
 const AppContent: React.FC = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState<boolean>(false); // State to manage sidebar visibility
   const { setIsAuthenticated } = useAuth(); // Get the setIsAuthenticated function from AuthContext
+  const location = useLocation();
   
   useEffect(() => {
     setupResponseInterceptorsRefreshToken((status: boolean) => {
       setIsAuthenticated(status); // Update authentication status using AuthContext
     });
   }, [setIsAuthenticated]); // Dependency array ensures this effect runs only once when setIsAuthenticated is stable
+
+  useEffect(() => {
+    // Send page view event to Google Analytics 4
+    sendDataForAnalytics({ hitType: 'pageview', page: location.pathname });
+  }, [location]); // Dependency array ensures this effect runs on location change
 
   // Function to toggle sidebar visibility
   const toggleSidebar = () => {

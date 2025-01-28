@@ -12,3 +12,27 @@
     padding: 8px;
     box-sizing: border-box;
 }
+
+.form-group {
+    position: relative;
+    margin-bottom: 1rem;
+  }
+  
+.input-wrapper {
+position: relative;
+}
+
+.input-wrapper input {
+width: 100%;
+padding-right: 60px; /* Adjust based on the width of the toggle button */
+}
+
+.toggle-password-button {
+position: absolute;
+right: 10px;
+top: 50%;
+transform: translateY(-50%);
+cursor: pointer;
+user-select: none;
+color: #007bff;
+}

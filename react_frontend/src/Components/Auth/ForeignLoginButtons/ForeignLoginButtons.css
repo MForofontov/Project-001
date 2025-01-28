@@ -1,0 +1,5 @@
+.foreign-login-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Adjust the value as needed */
+  }
