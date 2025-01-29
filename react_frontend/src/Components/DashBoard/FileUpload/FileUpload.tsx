@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import uploadFile from '../../../services/uploadFile';
 import { AxiosResponse } from 'axios';
-import { Button, Typography, Box, Paper, dividerClasses } from '@mui/material';
+import { Button, Typography, Box } from '@mui/material';
 import { styled } from '@mui/system';
 
 const Input = styled('input')({
