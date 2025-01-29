@@ -23,21 +23,7 @@ export const initializeAnalytics = () => {
  * 
  * @param {object} payload - The data to be sent to Google Analytics. This should be an object
  *                  containing the event details such as hitType, eventCategory, eventAction, etc.
- * 
- * Example payload for a page view:
- * {
- *   hitType: 'pageview',
- *   page_path: '/home'
- * }
- * 
- * Example payload for a custom event:
- * {
- *   hitType: 'event',
- *   eventCategory: 'User',
- *   eventAction: 'Login',
- *   eventLabel: 'Login Button'
- * }
  */
-export const sendDataForAnalytics = (payload: { hitType: string, [key: string]: any }) => {
+export const sendPageView = (payload: { hitType: string, [key: string]: any }) => {
     ReactGA.send(payload);
   };

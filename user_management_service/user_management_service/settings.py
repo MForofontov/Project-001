@@ -194,6 +194,9 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
+SECURE_SSL_REDIRECT = False
+SECURE_PROXY_SSL_HEADER = None
+
 # Google OAuth settings
 GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
 GOOGLE_CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
