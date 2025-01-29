@@ -9,6 +9,7 @@ services:
     container_name: nginx # Name the container nginx
     ports:
       - '80:80' # Map port 80 of the host to port 80 of the container
+      - '443:443' # Map port 443 of the host to port 443 of the container
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf # Mount custom NGINX config file
     depends_on:
