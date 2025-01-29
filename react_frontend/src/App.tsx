@@ -16,7 +16,7 @@ import NotFound from './utils/Components/NotFound/NotFound';
 // Import route utilities
 import PrivateRoute from './utils/Routes/PrivateRoute';
 import PublicRoute from './utils/Routes/PublicRoute';
-import { initializeAnalytics, sendDataForAnalytics } from './services/analytics';
+import { initializeAnalytics, sendPageView } from './services/analytics';
 
 // Import response interceptors
 import { setupResponseInterceptorsRefreshToken } from './utils/ResponseInterceptors/setupResponseInterceptorsRefreshToken';
@@ -50,7 +50,7 @@ const AppContent: React.FC = () => {
 
   useEffect(() => {
     // Send page view event to Google Analytics 4
-    sendDataForAnalytics({ hitType: 'pageview', page: location.pathname });
+    sendPageView({ hitType: 'pageview', page: window.location.pathname });
   }, [location]); // Dependency array ensures this effect runs on location change
 
   // Function to toggle sidebar visibility

@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import './HomePage.css';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../utils/Contexts/AuthContext';
 import Loading from '../../utils/Components/Loading/Loading';
 
 const HomePage: React.FC = () => {
-    const { isAuthenticated, isloading } = useAuth(); // Get the authentication status from the context
+    const { isAuthenticated, isLoading } = useAuth(); // Get the authentication status from the context
   
   
-    if (isloading) {
+    if (isLoading) {
       return <Loading />; // Show a loading indicator while checking authentication
     }
   

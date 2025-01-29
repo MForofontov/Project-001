@@ -19,11 +19,11 @@ export const initializeAnalytics = () => {
 };
 
 /**
- * Sends data to Google Analytics.
+ * Sends data to Google Analytics 4.
  * 
- * @param {Record<string, any>} payload - The data to be sent to Google Analytics. This should be an object
+ * @param {object} payload - The data to be sent to Google Analytics. This should be an object
  *                  containing the event details such as hitType, eventCategory, eventAction, etc.
  */
-export const sendDataForAnalytics = (payload: Record<string, any>) => {
-  ReactGA.send(payload);
-};
+export const sendPageView = (payload: { hitType: string, [key: string]: any }) => {
+    ReactGA.send(payload);
+  };

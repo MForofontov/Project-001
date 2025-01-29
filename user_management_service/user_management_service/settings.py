@@ -26,7 +26,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '0.0.0.0,localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
 
 # Application definition
 
@@ -143,9 +143,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ORIGIN_ALLOW_ALL = False  # Disable this for better security in production
 
-CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:5173').split(',')  # URL of your React development server
+CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', 'https://localhost').split(',')  # URL of your React development server or production server
 
-CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'http://localhost:5173').split(',')  # URL of your React development server
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'https://localhost').split(',')  # URL of your React development server or production server
 
 CSRF_COOKIE_HTTPONLY = True # Enable this for better security in production
 
@@ -184,7 +184,7 @@ SIMPLE_JWT = {
 SIMPLE_JWT.update({
     'ACCESS_COOKIE': 'access_token',  # Cookie name. Can be changed.
     'REFRESH_COOKIE': 'refresh_token',  # Cookie name. Can be changed.
-    'AUTH_COOKIE_SECURE': True,  # Whether the auth cookies should be secure (https).
+    'AUTH_COOKIE_SECURE': True,  # Whether the auth cookies should be secure (https). If this is set to True, the cookie will only be sent if the connection is secure. If application uses HTTP this is not enforced.
     'AUTH_COOKIE_HTTP_ONLY': True,  # Http only cookie flag. Can't be accessed by javascript.
     'AUTH_COOKIE_PATH': '/',  # The path of the auth cookie.
     'AUTH_COOKIE_SAMESITE': 'Lax',  # Same site cookie flag.
@@ -193,6 +193,9 @@ SIMPLE_JWT.update({
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
+
+SECURE_SSL_REDIRECT = False
+SECURE_PROXY_SSL_HEADER = None
 
 # Google OAuth settings
 GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')

@@ -3,17 +3,17 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
 // Create an axios instance for the user management service
 const userManagementApi: AxiosInstance = axios.create({
-  baseURL: 'http://localhost:8000/api', // User Management API base URL
+  baseURL: 'https://localhost/api/user-management/v1/', // User Management API base URL
   timeout: 30000, // Request timeout of 30 seconds
   withCredentials: true, // Ensure cookies are sent with requests
   headers: {
     'Content-Type': 'application/json', // Default content type
-  },
+  }
 });
 
 // Create an axios instance for the data processing service
 const dataProcessingApi: AxiosInstance = axios.create({
-  baseURL: 'http://localhost:8001/api', // Data Processing API base URL
+  baseURL: 'http://localhost:8001/api/data_processing', // Data Processing API base URL
   timeout: 30000, // Request timeout of 30 seconds
   withCredentials: true, // Ensure cookies are sent with requests
   headers: {
