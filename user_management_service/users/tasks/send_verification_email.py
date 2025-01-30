@@ -22,7 +22,7 @@ def send_verification_email(user_id):
         user = CustomUser.objects.get(pk=user_id)
         
         # Generate a token for email verification
-        token = email_verification_token.make_token(user)
+        token = email_verification_token._make_hash_value(user)
         
         # Encode the user's ID in a URL-safe base64 format
         uid = urlsafe_base64_encode(force_bytes(user.pk))
