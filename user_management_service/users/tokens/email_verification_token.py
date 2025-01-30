@@ -1,3 +1,4 @@
+import time
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from datetime import datetime, timedelta
 
@@ -9,7 +10,7 @@ class EmailVerificationTokenGenerator(PasswordResetTokenGenerator):
     for email verification purposes. The token is generated using the user's
     primary key, a timestamp, and the user's email confirmation status.
     """
-    def _make_hash_value(self, user, timestamp):
+    def _make_hash_value(self, user):
         """
         Generate a hash value to be used in the token.
 
@@ -17,8 +18,6 @@ class EmailVerificationTokenGenerator(PasswordResetTokenGenerator):
         ----------
         user : CustomUser
             The user for whom the token is being generated.
-        timestamp : int
-            The timestamp when the token is generated.
 
         Returns
         -------
@@ -26,7 +25,7 @@ class EmailVerificationTokenGenerator(PasswordResetTokenGenerator):
             A string representing the hash value.
         """
         return (
-            str(user.pk) + str(timestamp) + str(user.is_email_confirmed)
+            str(user.pk) + str(time.time()) + str(user.is_email_verified)
         )
 
     def has_token_expired(self, user, token):

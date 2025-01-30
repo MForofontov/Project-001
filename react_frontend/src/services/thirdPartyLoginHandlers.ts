@@ -3,7 +3,7 @@
  */
 export const handleGoogleLogin = () => {
   // Redirect the user to the Google login URL
-  window.location.href = 'http://localhost:8000/api/google/login/';
+  window.location.href = 'http://localhost/user-management/api/v1/google/login/';
 };
 
 /**
@@ -11,5 +11,5 @@ export const handleGoogleLogin = () => {
  */
 export const handleFacebookLogin = () => {
   // Redirect the user to the Facebook login URL
-  window.location.href = 'http://localhost:8000/api/facebook/login/';
+  window.location.href = 'http://localhost/user-management/api/facebook/login/';
 };

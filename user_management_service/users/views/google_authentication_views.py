@@ -29,8 +29,8 @@ class GoogleLoginView(View):
             "https://accounts.google.com/o/oauth2/v2/auth?"
             "response_type=code&"
             f"client_id={settings.GOOGLE_CLIENT_ID}&"
-            "redirect_uri=http://localhost:8000/api/google/callback/&"
-            "scope=email profile"
+            f"redirect_uri={settings.GOOGLE_REDIRECT_URI}&"
+            "scope=email%20profile"
         )
         return HttpResponseRedirect(google_auth_url)
 
@@ -60,7 +60,7 @@ class GoogleCallbackView(View):
             'code': code,
             'client_id': settings.GOOGLE_CLIENT_ID,
             'client_secret': settings.GOOGLE_CLIENT_SECRET,
-            'redirect_uri': 'http://localhost:8000/api/google/callback/',
+            'redirect_uri': settings.GOOGLE_REDIRECT_URI,
             'grant_type': 'authorization_code'
         }
         token_response: requests.Response = requests.post(token_url, data=token_data)
@@ -95,7 +95,7 @@ class GoogleCallbackView(View):
         refresh_token_jwt: str = str(refresh)
 
         # Create response and set HTTP-only cookies for access and refresh tokens
-        response: HttpResponse = HttpResponseRedirect('http://localhost:5173/dashboard')  # Replace with your frontend URL
+        response: HttpResponse = HttpResponseRedirect('https://localhost/dashboard')  # Replace with your frontend URL
         response.set_cookie(
             key=settings.SIMPLE_JWT['ACCESS_COOKIE'],
             value=access_token_jwt,
