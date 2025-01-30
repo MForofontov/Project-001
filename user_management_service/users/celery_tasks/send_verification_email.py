@@ -43,8 +43,8 @@ def send_verification_email(user_id):
         plain_message = f"Hi {user.username},\nPlease verify your email address by clicking the following link: {verification_link}"
         
         # Create the email
-        email = EmailMultiAlternatives(subject, html_message, settings.DEFAULT_FROM_EMAIL, [user.email])
-        email.attach_alternative(plain_message, "text/plain")
+        email = EmailMultiAlternatives(subject, plain_message, settings.DEFAULT_FROM_EMAIL, [user.email])
+        email.attach_alternative(html_message, "text/html")
         
         # Send the email
         email.send()
