@@ -210,6 +210,7 @@ EMAIL_USE_TLS = bool(os.getenv('EMAIL_USE_TLS'))
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
+EMAIL_VERIFICATION_SALT = os.getenv('EMAIL_VERIFICATION_SALT', 'email-verification-salt')
 
 # Redis settings (optional)
 REDIS_HOST = os.getenv('USER_MANAGEMENT_SERVICE_REDIS_HOST')
@@ -227,4 +228,4 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'UTC'
 
 # Frontend URL
-FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:5173') # URL of your React server
+FRONTEND_URL = os.getenv('FRONTEND_URL', 'https://localhost') # URL of your React server
