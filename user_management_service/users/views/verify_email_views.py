@@ -1,6 +1,5 @@
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_str
-from django.http import JsonResponse
 from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.views import APIView
@@ -42,21 +41,22 @@ class VerifyEmailView(APIView):
             uid = force_str(urlsafe_base64_decode(uidb64))
             
             # Get the user object
-            user = User.objects.get(pk=uid)
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = CustomUser.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
             user = None
 
-        if email_verification_token.has_token_expired(user, token):
-            return JsonResponse({'message': 'Email verification link has expired.'}, status=400)
-        # Check if the token is valid
-        if user is not None and email_verification_token.check_token(user, token):
-            if user.is_email_verified:
-                return JsonResponse({'message': 'Email is already verified.'})
+        # Check the token status
+        token_status = email_verification_token.check_token(token)
+        if user is not None and token_status == user.pk:
+            # Mark the user's email as verified
             user.is_email_verified = True
             user.save()
-            return JsonResponse({'message': 'Email verified successfully.'})
+            return Response({"message": "Email verified"}, status=status.HTTP_200_OK)
+        elif token_status == 'expired':
+            return Response({"message": "Verification link has expired"}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return JsonResponse({'message': 'Email verification failed.'}, status=400)
+            return Response({"message": "Invalid verification link"}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class RequestEmailVerificationView(APIView):
     """
@@ -86,7 +86,7 @@ class RequestEmailVerificationView(APIView):
         if user.is_email_verified:
             return Response({"message": "Email is already verified"}, status=status.HTTP_200_OK)
 
-        # Send the email verification link
+        # Send the email verification link asynchronously
         send_verification_email.delay(user.id)
 
         # Return a response indicating that the email verification request has been sent
@@ -122,16 +122,16 @@ class ResendEmailVerificationView(APIView):
             uid = force_str(urlsafe_base64_decode(uidb64))
             
             # Get the user object
-            user = User.objects.get(pk=uid)
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = CustomUser.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
             return Response({"message": "Invalid user ID"}, status=status.HTTP_400_BAD_REQUEST)
 
         # Check if the user's email is already verified
         if user.is_email_verified:
             return Response({"message": "Email is already verified"}, status=status.HTTP_200_OK)
         
-        # Send the email verification link
-        send_verification_email(user)
+        # Send the email verification link asynchronously
+        send_verification_email.delay(user.id)
 
         # Return a response indicating that the email verification request has been resent
         return Response({"message": "Email verification request resent"}, status=status.HTTP_200_OK)

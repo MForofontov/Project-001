@@ -3,7 +3,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
 // Create an axios instance for the user management service
 const userManagementApi: AxiosInstance = axios.create({
-  baseURL: 'https://localhost/api/user-management/v1/', // User Management API base URL
+  baseURL: 'https://localhost/user-management/api/v1/', // User Management API base URL
   timeout: 30000, // Request timeout of 30 seconds
   withCredentials: true, // Ensure cookies are sent with requests
   headers: {

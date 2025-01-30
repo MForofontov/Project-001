@@ -1,83 +1,53 @@
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from datetime import datetime, timedelta
+from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
+from django.conf import settings
 
-class EmailVerificationTokenGenerator(PasswordResetTokenGenerator):
-    """
-    Custom token generator for email verification.
-    
-    This class extends Django's PasswordResetTokenGenerator to create tokens
-    for email verification purposes. The token is generated using the user's
-    primary key, a timestamp, and the user's email confirmation status.
-    """
-    def _make_hash_value(self, user, timestamp):
+class EmailVerificationTokenGenerator:
+    def __init__(self):
+        self.secret_key = settings.SECRET_KEY
+        self.salt = settings.EMAIL_VERIFICATION_SALT
+        self.serializer = URLSafeTimedSerializer(self.secret_key)
+
+    def make_token(self, user):
         """
-        Generate a hash value to be used in the token.
+        Generate a token for the user.
 
         Parameters
         ----------
         user : CustomUser
             The user for whom the token is being generated.
-        timestamp : int
-            The timestamp when the token is generated.
 
         Returns
         -------
         str
-            A string representing the hash value.
+            A string representing the token.
         """
-        return (
-            str(user.pk) + str(timestamp) + str(user.is_email_confirmed)
-        )
+        return self.serializer.dumps(user.pk, salt=self.salt)
 
-    def has_token_expired(self, user, token):
+    def check_token(self, token, max_age=86400):
         """
-        Check if the token has expired.
-
-        Parameters
-        ----------
-        user : CustomUser
-            The user for whom the token was generated.
-        token : str
-            The token to check for expiration.
-
-        Returns
-        -------
-        bool
-            True if the token has expired, False otherwise.
-        """
-        try:
-            # Extract the timestamp from the token
-            timestamp = self._get_timestamp(token)
-            # Calculate the expiration date (assuming 1 day expiration)
-            expiration_date = datetime.fromtimestamp(timestamp) + timedelta(days=1)
-            # Check if the current date and time is greater than the expiration date
-            return datetime.now() > expiration_date
-        except Exception:
-            # Return False if there is an exception (e.g., invalid token format)
-            return False
-
-    def _get_timestamp(self, token):
-        """
-        Extract the timestamp from the token.
+        Check if the token is valid and not expired.
 
         Parameters
         ----------
         token : str
-            The token from which to extract the timestamp.
+            The token to check.
+        max_age : int
+            The maximum age of the token in seconds (default is 1 day).
 
         Returns
         -------
-        int
-            The timestamp extracted from the token.
+        int or None
+            The user_id if the token is valid and not expired, None otherwise.
         """
         try:
-            # Split the token to get the timestamp part (base 36 encoded)
-            ts_b36, _ = token.split("-")
-            # Convert the base 36 encoded timestamp to an integer
-            return int(ts_b36, 36)
-        except ValueError:
-            # Return None if there is a ValueError (e.g., invalid token format)
-            return None
+            user_id = self.serializer.loads(token, salt=self.salt, max_age=max_age)
+            return user_id
+        except SignatureExpired:
+            # Token is valid but expired
+            return 'expired'
+        except BadSignature:
+            # Token is invalid
+            return 'invalid'
 
 # Create an instance of the EmailVerificationTokenGenerator
 email_verification_token = EmailVerificationTokenGenerator()
