@@ -9,5 +9,7 @@ providers:
     type: file # The type of provider (file means the dashboards are read from the file system)
     disableDeletion: false # Whether to disable the deletion of dashboards managed by this provider
     updateIntervalSeconds: 10 # How often Grafana will scan the directory for changes (in seconds)
+    allowUiUpdates: true # Allow updates to dashboards from the Grafana UI
+    editable: true # Specify whether the dashboards are editable
     options:
       path: /var/lib/grafana/dashboards # The path to the directory where the dashboards are stored
