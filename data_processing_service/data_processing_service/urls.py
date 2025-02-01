@@ -19,6 +19,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path("admin/data_processing/", admin.site.urls), # Admin interface
-    path("api/data_processing/", include("api.urls")), # Include the API URLs
+    path("data_processing/api/v1/", include("api.urls")), # Include the API URLs
     path('metrics/', include('django_prometheus.urls')),  # Expose Prometheus metrics at /metrics
 ]
