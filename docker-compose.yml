@@ -32,6 +32,9 @@ services:
       - ./react_frontend:/react_frontend_docker # Mount the react_frontend source code directory
     command: npm run dev -- --host 0.0.0.0 # Run the Vite dev server
     user: "${UID}:${GID}" # Use the specified user and group IDs
+    depends_on:
+      - prometheus # Ensure the prometheus service starts before this service
+      - grafana # Ensure the grafana service starts before this service
     networks:
       - app-network # Connect to the app-network
 
@@ -51,6 +54,8 @@ services:
       - db_user_management_service # Ensure the db_user_management_service starts before this service
       - redis_user_management_service # Ensure the redis_user_management_service starts before this service
       - kafka # Ensure the kafka service starts before this service
+      - prometheus # Ensure the prometheus service starts before this service
+      - grafana # Ensure the grafana service starts before this service
     networks:
       - app-network # Connect to the app-network
 
@@ -70,6 +75,8 @@ services:
       - db_data_processing_service # Ensure the db_data_processing_service starts before this service
       - data_processing_service_redis # Ensure the data_processing_service_redis starts before this service
       - kafka # Ensure the kafka service starts before this service
+      - prometheus # Ensure the prometheus service starts before this service
+      - grafana # Ensure the grafana service starts before this service
     networks:
       - app-network # Connect to the app-network
 
@@ -168,10 +175,28 @@ services:
     networks:
       - app-network # Connect to the app-network
 
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-storage:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+
 volumes:
   postgres_data_user_management: # Define the volume for the user management PostgreSQL data
   postgres_data_data_processing: # Define the volume for the data processing PostgreSQL data
   kafka_data: # Define the volume for the Kafka data
+  grafana-storage: # Define the volume for the Grafana data
 
 networks:
   app-network:

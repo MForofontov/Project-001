@@ -1,0 +1,13 @@
+# The API version for the provisioning configuration
+apiVersion: 1
+
+# List of dashboard providers
+providers:
+  - name: 'default' # The name of the provider
+    orgId: 1 # The organization ID (1 is the default organization)
+    folder: '' # The folder in Grafana where the dashboards will be placed (empty means the root folder)
+    type: file # The type of provider (file means the dashboards are read from the file system)
+    disableDeletion: false # Whether to disable the deletion of dashboards managed by this provider
+    updateIntervalSeconds: 10 # How often Grafana will scan the directory for changes (in seconds)
+    options:
+      path: /var/lib/grafana/dashboards # The path to the directory where the dashboards are stored
