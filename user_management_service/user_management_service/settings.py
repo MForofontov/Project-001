@@ -47,6 +47,9 @@ INSTALLED_APPS = [
     # Local Apps
     "users.apps.UsersConfig",
     "api.apps.ApiConfig",
+
+    # Prometheus
+    'django_prometheus',
 ]
 
 MIDDLEWARE = [
@@ -57,11 +60,16 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    
+
+    # Cors middleware
     "corsheaders.middleware.CorsMiddleware",
-    "django.middleware.common.CommonMiddleware",
-    
+
+    # Custom middleware
     "user_management_service.middleware.TokenToAuthorizationHeaderMiddleware",
+
+    # Prometheus middleware
+    'django_prometheus.middleware.PrometheusBeforeMiddleware',
+    'django_prometheus.middleware.PrometheusAfterMiddleware',
 ]
 
 ROOT_URLCONF = "user_management_service.urls"

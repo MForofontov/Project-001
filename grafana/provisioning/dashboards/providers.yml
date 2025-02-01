@@ -8,7 +8,7 @@ providers:
     folder: '' # The folder in Grafana where the dashboards will be placed (empty means the root folder)
     type: file # The type of provider (file means the dashboards are read from the file system)
     disableDeletion: false # Whether to disable the deletion of dashboards managed by this provider
-    updateIntervalSeconds: 10 # How often Grafana will scan the directory for changes (in seconds)
+    updateIntervalSeconds: 15 # How often Grafana will scan the directory for changes (in seconds)
     allowUiUpdates: true # Allow updates to dashboards from the Grafana UI
     editable: true # Specify whether the dashboards are editable
     options:

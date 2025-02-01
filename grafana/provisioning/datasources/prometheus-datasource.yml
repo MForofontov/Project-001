@@ -12,6 +12,6 @@ datasources:
     basicAuth: false # Enable basic authentication (set to true if needed)
     withCredentials: false # Send credentials such as cookies or HTTP headers with cross-site requests
     jsonData: # Additional JSON data specific to the data source type
-      timeInterval: "5s" # The minimum time interval between Prometheus queries
+      timeInterval: "15s" # The minimum time interval between Prometheus queries
     secureJsonData: # Secure JSON data, such as passwords or API keys
       basicAuthPassword: "" # The password for basic authentication (if basicAuth is true)
