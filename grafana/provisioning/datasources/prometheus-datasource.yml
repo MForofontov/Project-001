@@ -1,0 +1,17 @@
+# The API version for the provisioning configuration
+apiVersion: 1
+
+# List of data sources to be provisioned
+datasources:
+  - name: Prometheus # The name of the data source
+    type: prometheus # The type of the data source
+    access: proxy # The access mode (proxy means Grafana will proxy requests to the data source)
+    url: http://prometheus:9090 # The URL of the Prometheus server
+    isDefault: true # Whether this data source should be the default
+    editable: true # Whether this data source can be edited in the Grafana UI
+    basicAuth: false # Enable basic authentication (set to true if needed)
+    withCredentials: false # Send credentials such as cookies or HTTP headers with cross-site requests
+    jsonData: # Additional JSON data specific to the data source type
+      timeInterval: "15s" # The minimum time interval between Prometheus queries
+    secureJsonData: # Secure JSON data, such as passwords or API keys
+      basicAuthPassword: "" # The password for basic authentication (if basicAuth is true)

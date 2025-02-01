@@ -1,0 +1,15 @@
+global:
+  scrape_interval: 15s # How often Prometheus will scrape metrics from targets (in seconds)
+
+scrape_configs:
+  - job_name: 'prometheus' # A job to scrape Prometheus' own metrics
+    static_configs:
+      - targets: ['localhost:9090'] # The Prometheus server itself
+
+  - job_name: 'user_management_service' # A job to scrape metrics from the user_management_service
+    static_configs:
+      - targets: ['user_management_service:8000/metrics'] # The user_management_service running on port 8000
+
+  - job_name: 'data_processing_service' # A job to scrape metrics from the data_processing_service
+    static_configs:
+      - targets: ['data_processing_service:8001/metrics'] # The data_processing_service running on port 8001

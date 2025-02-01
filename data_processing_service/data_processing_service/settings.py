@@ -48,6 +48,9 @@ INSTALLED_APPS = [
     # Local Apps
     "api.apps.ApiConfig",
     "process_music_files.apps.ProcessMusicFilesConfig",
+
+    # Prometheus
+    'django_prometheus',
 ]
 
 MIDDLEWARE = [
@@ -58,11 +61,16 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    
+
+    # Cors middleware
     "corsheaders.middleware.CorsMiddleware",
-    "django.middleware.common.CommonMiddleware",
-    
+
+    # Middleware to convert token to Authorization header
     "data_processing_service.middleware.TokenToAuthorizationHeaderMiddleware",
+
+    # Prometheus middleware
+    'django_prometheus.middleware.PrometheusBeforeMiddleware',
+    'django_prometheus.middleware.PrometheusAfterMiddleware',
 ]
 
 ROOT_URLCONF = "data_processing_service.urls"
