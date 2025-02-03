@@ -2,15 +2,18 @@ from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from users.serializers import CustomTokenObtainPairSerializer
 from django.conf import settings
 from django.http import HttpRequest, HttpResponse
+from users.serializers.CustomTokenRefreshSerializer import CustomTokenRefreshSerializer
+from users.serializers.CustomTokenObtainPairSerializer import CustomTokenObtainPairSerializer
 from typing import Any
 
 class CustomTokenRefreshView(TokenRefreshView):
     """
     Custom view to refresh JWT tokens using a refresh token stored in cookies.
     """
+    serializer_class = CustomTokenRefreshSerializer
+
     def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         """
         Handles POST requests to refresh JWT tokens.
