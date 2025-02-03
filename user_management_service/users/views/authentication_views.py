@@ -10,66 +10,63 @@ from typing import Any
 
 class CustomTokenRefreshView(TokenRefreshView):
     """
-    Custom view to refresh JWT tokens using a refresh token stored in cookies.
+    Custom view to handle refreshing JWT tokens and storing them in cookies.
+    This view extends the TokenRefreshView from the djangorestframework-simplejwt package.
     """
     serializer_class = CustomTokenRefreshSerializer
 
-    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+    def post(self, request: HttpRequest) -> Response:
         """
-        Handles POST requests to refresh JWT tokens.
+        Handle POST requests to refresh JWT tokens.
 
         Parameters
         ----------
-        request : HttpRequest
+        request : Request
             The HTTP request object.
+        *args : Any
+            Additional positional arguments.
+        **kwargs : Any
+            Additional keyword arguments.
 
         Returns
         -------
-        HttpResponse
-            A response containing the new JWT tokens and setting them in cookies.
+        Response
+            A JSON response with the refreshed JWT tokens or an error message.
         """
-        # Retrieve the refresh token from cookies
-        refresh_token: str = request.COOKIES.get('refreshToken')
-        if not refresh_token:
-            # Return an error response if the refresh token is missing
-            return Response({'message': 'Refresh token missing'}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Initialize the serializer with the refresh token
-        serializer = self.get_serializer(data={'refresh': refresh_token})
+        serializer = self.get_serializer(data=request.data)
         try:
-            # Validate the serializer data
             serializer.is_valid(raise_exception=True)
         except Exception as e:
-            # Create a response indicating failure
-            response: Response = Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-            
-            # Delete the access and refresh tokens from cookies
-            response.delete_cookie('accessToken')
-            response.delete_cookie('refreshToken')
-            
-            return response
+            return Response({"error": "Invalid refresh token"}, status=status.HTTP_401_UNAUTHORIZED)
 
-        # Create a response with the validated data
-        response = Response(serializer.validated_data)
-        # Retrieve the new access token from the validated data
-        access_token: str = serializer.validated_data.get('access')
+        # Get the validated data (tokens)
+        tokens = serializer.validated_data
 
-        # Set the new access token in cookies
+        # Create the response object
+        response = Response(status=status.HTTP_200_OK)
+
+        # Set the cookies for access and refresh tokens
         response.set_cookie(
             key=settings.SIMPLE_JWT['AUTH_COOKIE'],
-            value=access_token,
+            value=tokens['access'],
             expires=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'],
             secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
             httponly=settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
             samesite=settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE'],
             max_age=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME']
         )
+        # Set the refresh token in cookies if rotation is enabled
+        if tokens['refresh']:
+            response.set_cookie(
+                key=settings.SIMPLE_JWT['REFRESH_COOKIE'],
+                value=tokens['refresh'],
+                expires=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'],
+                secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
+                httponly=settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
+                samesite=settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE'],
+                max_age=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME']
+            )
 
-        # Remove the refresh and access tokens from the response data
-        response.data.pop('refresh', None)
-        response.data.pop('access', None)
-
-        # Return the response
         return response
 
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -79,7 +76,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     # Specify the custom serializer class to use
     serializer_class = CustomTokenObtainPairSerializer
 
-    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+    def post(self, request: HttpRequest) -> HttpResponse:
         """
         Handles POST requests to obtain JWT tokens and store them in cookies.
 
@@ -93,21 +90,22 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         HttpResponse
             A response containing the JWT tokens and setting them in cookies.
         """
-        # Initialize the serializer with the request data
-        serializer: CustomTokenObtainPairSerializer = self.get_serializer(data=request.data)
-        # Validate the serializer data
-        serializer.is_valid(raise_exception=True)
-        # Create a response with the validated data
-        response: Response = Response(serializer.validated_data)
+        serializer = self.get_serializer(data=request.data)
+        try:
+            serializer.is_valid(raise_exception=True)
+        except Exception as e:
+            return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
 
-        # Retrieve the refresh and access tokens from the validated data
-        access_token: str = serializer.validated_data['access']
-        refresh_token: str = serializer.validated_data['refresh']
+        # Get the validated data (tokens)
+        tokens = serializer.validated_data
+
+        # Create the response object
+        response = Response(status=status.HTTP_200_OK)
 
         # Set the access token in cookies
         response.set_cookie(
             key=settings.SIMPLE_JWT['ACCESS_COOKIE'],
-            value=access_token,
+            value=tokens['access'],
             expires=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'],
             secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
             httponly=settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
@@ -117,17 +115,13 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         # Set the refresh token in cookies
         response.set_cookie(
             key=settings.SIMPLE_JWT['REFRESH_COOKIE'],
-            value=refresh_token,
+            value=tokens['refresh'],
             expires=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'],
             secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
             httponly=settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
             samesite=settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE'],
             max_age=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME']
         )
-
-        # Remove the refresh and access tokens from the response data
-        response.data.pop('refresh', None)
-        response.data.pop('access', None)
 
         # Return the response
         return response
