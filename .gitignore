@@ -1,2 +1,5 @@
 # Ignore ENV
 .env
+
+# ssl certificates
+nginx/ssl/*
