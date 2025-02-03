@@ -56,7 +56,7 @@ class CustomTokenRefreshView(TokenRefreshView):
             max_age=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME']
         )
         # Set the refresh token in cookies if rotation is enabled
-        if tokens['refresh']:
+        if tokens.get('refresh'):
             response.set_cookie(
                 key=settings.SIMPLE_JWT['REFRESH_COOKIE'],
                 value=tokens['refresh'],
