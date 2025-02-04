@@ -5,7 +5,7 @@ from users.serializers import UserSerializer, UserProfileSerializer, CustomToken
 from django.contrib.auth import get_user_model
 from django.http import HttpRequest, HttpResponse
 from users.models import CustomUser
-from users.tasks.send_verification_email import send_verification_email
+from users.celery_tasks.send_verification_email import send_verification_email
 from django.conf import settings
 from typing import Dict
 
