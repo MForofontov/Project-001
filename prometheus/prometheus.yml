@@ -6,10 +6,14 @@ scrape_configs:
     static_configs:
       - targets: ['localhost:9090'] # The Prometheus server itself
 
-  - job_name: 'user_management_service' # A job to scrape metrics from the user_management_service
+  - job_name: 'user-management-service' # A job to scrape metrics from the user_management_service
+    scheme: http
+    metrics_path: /prometheus/metrics
     static_configs:
-      - targets: ['user_management_service:8000/metrics'] # The user_management_service running on port 8000
+      - targets: ['user-management-service:8000'] # The user_management_service running on port 8000
 
-  - job_name: 'data_processing_service' # A job to scrape metrics from the data_processing_service
+  - job_name: 'data-processing-service' # A job to scrape metrics from the data_processing_service
+    scheme: http
+    metrics_path: /prometheus/metrics
     static_configs:
-      - targets: ['data_processing_service:8001/metrics'] # The data_processing_service running on port 8001
+      - targets: ['data-processing-service:8001'] # The data_processing_service running on port 8001

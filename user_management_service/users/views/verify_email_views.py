@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from django.http import HttpRequest
 from users.tokens.email_verification_token import email_verification_token
 from users.models import CustomUser
-from users.tasks.send_verification_email import send_verification_email
+from users.celery_tasks.send_verification_email import send_verification_email
 
 User = get_user_model()
 
