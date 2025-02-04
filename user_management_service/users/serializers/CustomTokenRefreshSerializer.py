@@ -1,6 +1,8 @@
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
+from rest_framework import serializers
 
 class CustomTokenRefreshSerializer(TokenRefreshSerializer):
     """
@@ -21,7 +23,15 @@ class CustomTokenRefreshSerializer(TokenRefreshSerializer):
         dict
             A dictionary containing the new access token and refresh token.
         """
-        refresh = RefreshToken(attrs['refresh'])
+        refresh_token = attrs.get('refresh')
+        if not refresh_token:
+            raise serializers.ValidationError({'refresh': 'No refresh token provided'})
+        try:
+            refresh = RefreshToken(refresh_token)
+        except TokenError:
+            raise serializers.ValidationError({'refresh': 'Invalid or expired refresh token'})
+        except InvalidToken:
+            raise serializers.ValidationError({'refresh': 'Blacklisted refresh token'})
 
         data = {'access': str(refresh.access_token)}
 
@@ -30,7 +40,7 @@ class CustomTokenRefreshSerializer(TokenRefreshSerializer):
                 try:
                     refresh.blacklist()
                 except AttributeError:
-                    pass
+                    raise serializers.ValidationError({'refresh': 'Failed to blacklist refresh token'})
 
             refresh.set_jti()
             refresh.set_exp()

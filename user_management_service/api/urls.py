@@ -28,7 +28,8 @@ urlpatterns = [
     # Google OAuth
     path('google/login/', GoogleLoginView.as_view(), name='google-login'),
     path('google/callback/', GoogleCallbackView.as_view(), name='google-callback'),
-    path('google/refresh_token/', RefreshGoogleTokenView.as_view(), name='google-refresh-token'),
+    #TODO implement refresh token for google in frontend
+    path('google/refresh-token/', RefreshGoogleTokenView.as_view(), name='google-refresh-token'),
 
     # Email Verification
     path('verify-email/', VerifyEmailView.as_view(), name='verify-email'),

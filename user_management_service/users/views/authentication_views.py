@@ -14,6 +14,7 @@ class CustomTokenRefreshView(TokenRefreshView):
     This view extends the TokenRefreshView from the djangorestframework-simplejwt package.
     """
     serializer_class = CustomTokenRefreshSerializer
+    permission_classes = (permissions.AllowAny,)
 
     def post(self, request: HttpRequest) -> Response:
         """
@@ -34,10 +35,8 @@ class CustomTokenRefreshView(TokenRefreshView):
             A JSON response with the refreshed JWT tokens or an error message.
         """
         serializer = self.get_serializer(data=request.data)
-        try:
-            serializer.is_valid(raise_exception=True)
-        except Exception as e:
-            return Response({"error": "Invalid refresh token"}, status=status.HTTP_401_UNAUTHORIZED)
+
+        serializer.is_valid(raise_exception=True)
 
         # Get the validated data (tokens)
         tokens = serializer.validated_data
@@ -47,7 +46,7 @@ class CustomTokenRefreshView(TokenRefreshView):
 
         # Set the cookies for access and refresh tokens
         response.set_cookie(
-            key=settings.SIMPLE_JWT['AUTH_COOKIE'],
+            key=settings.SIMPLE_JWT['ACCESS_COOKIE'],
             value=tokens['access'],
             expires=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'],
             secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],

@@ -26,7 +26,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,admin.localhost,user-management-service').split(',')
 
 # Application definition
 
@@ -53,6 +53,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    # Prometheus middleware
+    'django_prometheus.middleware.PrometheusBeforeMiddleware',
+
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -68,7 +71,6 @@ MIDDLEWARE = [
     "user_management_service.middleware.TokenToAuthorizationHeaderMiddleware",
 
     # Prometheus middleware
-    'django_prometheus.middleware.PrometheusBeforeMiddleware',
     'django_prometheus.middleware.PrometheusAfterMiddleware',
 ]
 
@@ -202,7 +204,7 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = False
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Google OAuth settings

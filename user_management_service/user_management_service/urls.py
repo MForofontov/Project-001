@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path("admin/user-management/", admin.site.urls), # Admin interface
-    path("user-management/api/v1/", include("api.urls")), # Include the API URLs
-    path('metrics/', include('django_prometheus.urls')),  # Expose Prometheus metrics at /metrics
+    path('admin/user-management/', admin.site.urls), # Admin interface
+    path('user-management/api/v1/', include('api.urls')), # Include the API URLs
+    path('prometheus/', include('django_prometheus.urls')),  # Expose Prometheus metrics
 ]
