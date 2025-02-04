@@ -1,25 +1,24 @@
 {
-    "dashboard": {
-      "id": null,
-      "uid": "prometheus-dashboard",
-      "title": "Prometheus Metrics",
-      "schemaVersion": 16,
-      "version": 0,
-      "panels": [
-        {
-          "type": "graph",
-          "title": "CPU Usage",
-          "targets": [
-            {
-              "expr": "rate(node_cpu_seconds_total{mode=\"user\"}[5m])",
-              "legendFormat": "CPU User Mode",
-              "refId": "A"
-            }
-          ],
-          "gridPos": { "x": 0, "y": 0, "w": 12, "h": 6 }
-        }
-      ]
-    },
-    "overwrite": true
-  }
-  
+  "dashboard": {
+    "id": null,
+    "uid": "prometheus-dashboard",
+    "title": "Prometheus Metrics",
+    "schemaVersion": 16,
+    "version": 0,
+    "panels": [
+      {
+        "type": "graph",
+        "title": "CPU Usage",
+        "targets": [
+          {
+            "expr": "rate(node_cpu_seconds_total{mode=\"user\"}[5m])",
+            "legendFormat": "CPU User Mode",
+            "refId": "A"
+          }
+        ],
+        "gridPos": { "x": 0, "y": 0, "w": 12, "h": 6 }
+      }
+    ]
+  },
+  "overwrite": true
+}
