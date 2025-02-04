@@ -177,6 +177,7 @@ services:
 
   prometheus:
     image: prom/prometheus:latest
+    container_name: prometheus
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
@@ -184,6 +185,7 @@ services:
 
   grafana:
     image: grafana/grafana:latest
+    container_name: grafana
     ports:
       - "3001:3000"
     environment:
