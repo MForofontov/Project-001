@@ -1,0 +1,46 @@
+{
+  "id": null,
+  "uid": "user_managment_service_django_dashboard",
+  "title": "Django Application user_managment_service Dashboard Metrics",
+  "schemaVersion": 16,
+  "version": 0,
+  "panels": [
+    {
+      "type": "graph",
+      "title": "Request Rate",
+      "targets": [
+        {
+          "expr": "rate(django_http_requests_total{job='user-management-service'}[5m])",
+          "legendFormat": "Requests per second",
+          "refId": "A"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 6 }
+    },
+    {
+      "type": "graph",
+      "title": "Error Rate",
+      "targets": [
+        {
+          "expr": "rate(django_http_requests_total{{job='user-management-service', status=~\"5..\"}[5m])",
+          "legendFormat": "Errors per second",
+          "refId": "A"
+        }
+      ],
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 6 }
+    },
+    {
+      "type": "graph",
+      "title": "Response Time",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(django_http_request_duration_seconds_bucket{job='user-management-service'}[5m])) by (le))",
+          "legendFormat": "95th percentile response time",
+          "refId": "A"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 6, "w": 24, "h": 6 }
+    }
+  ],
+  "overwrite": true
+}
