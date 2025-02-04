@@ -8,8 +8,8 @@ scrape_configs:
 
   - job_name: 'user_management_service' # A job to scrape metrics from the user_management_service
     static_configs:
-      - targets: ['user_management_service:8000/metrics'] # The user_management_service running on port 8000
+      - targets: ['user_management_service:8000'] # The user_management_service running on port 8000
 
   - job_name: 'data_processing_service' # A job to scrape metrics from the data_processing_service
     static_configs:
-      - targets: ['data_processing_service:8001/metrics'] # The data_processing_service running on port 8001
+      - targets: ['data_processing_service:8001'] # The data_processing_service running on port 8001
