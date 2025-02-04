@@ -16,6 +16,8 @@ services:
       - react_frontend # Ensure the react_frontend service starts before this service
       - user_management_service # Ensure the user_management_service starts before this service
       - data_processing_service # Ensure the data_processing_service starts before this service
+      - prometheus # Ensure the prometheus service starts before this service
+      - grafana # Ensure the grafana service starts before this service
     networks:
       - app-network # Connect to the app-network
 
@@ -182,6 +184,8 @@ services:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
+    networks:
+      - app-network
 
   grafana:
     image: grafana/grafana:latest
@@ -194,6 +198,8 @@ services:
       - grafana-storage:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning
       - ./grafana/dashboards:/var/lib/grafana/dashboards
+    networks:
+      - app-network
 
 volumes:
   postgres_data_user_management: # Define the volume for the user management PostgreSQL data
